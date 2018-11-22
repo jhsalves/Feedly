@@ -14,29 +14,30 @@ asdfasdf
       <h6>an app for continuous feed</h6>
     </h1>
   </ion-item>
+<form novalidate [formGroup]="registerForm" (ngSubmit)="signUp()">
+    <ion-grid style="width: 75%;">
 
-  <ion-grid style="width: 75%;">
-
-    <ion-row class="rowStyle">
-      <ion-icon name="person" color="danger"></ion-icon>
-      <ion-input type="text" placeholder="your name"></ion-input>
-    </ion-row>
-
-    <ion-row class="rowStyle">
-      <ion-icon name="mail" color="danger"></ion-icon>
-      <ion-input type="email" placeholder="your email"></ion-input>
-    </ion-row>
-
-    <ion-row class="rowStyle">
-      <ion-icon name="key" color="danger"></ion-icon>
-      <ion-input type="password" placeholder="your password"></ion-input>
-    </ion-row>
-
-    <ion-row>
-      <ion-button align-center size="block" shape="round" fill="outline" color="light" style="width: 100%; margin-top: 20px;">Cadastrar</ion-button>
-    </ion-row>
-
-  </ion-grid>
+        <ion-row class="rowStyle">
+          <ion-icon name="person" color="danger"></ion-icon>
+          <ion-input type="text" placeholder="your name" formControlName="name"></ion-input>
+        </ion-row>
+    
+        <ion-row class="rowStyle">
+          <ion-icon name="mail" color="danger"></ion-icon>
+          <ion-input type="email" placeholder="your email" formControlName="email"></ion-input>
+        </ion-row>
+    
+        <ion-row class="rowStyle">
+          <ion-icon name="key" color="danger"></ion-icon>
+          <ion-input type="password" placeholder="your password" formControlName="password"></ion-input>
+        </ion-row>
+    
+        <ion-row>
+          <ion-button align-center size="block" shape="round" type="submit" fill="outline" color="light" style="width: 100%; margin-top: 20px;">Cadastrar</ion-button>
+        </ion-row>
+    
+      </ion-grid>
+</form>
   <ion-item>
     <ion-button fill="secondary" color="light" (click)="goToSignUp()">
       Já tem uma conta? Fazer login

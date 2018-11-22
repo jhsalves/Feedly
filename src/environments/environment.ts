@@ -3,7 +3,16 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const environment = {
-  production: false
+  production: false,
+    // Initialize Firebase
+    firebaseConfig: {
+      apiKey: "AIzaSyCcdyFMy1N6u4YaQK7h1UNKR-JuYhTmMjY",
+      authDomain: "feedlyapp-1a300.firebaseapp.com",
+      databaseURL: "https://feedlyapp-1a300.firebaseio.com",
+      projectId: "feedlyapp-1a300",
+      storageBucket: "feedlyapp-1a300.appspot.com",
+      messagingSenderId: "620631438712"
+    }
 };
 
 /*
