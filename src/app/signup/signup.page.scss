@@ -1,0 +1,56 @@
+app-login,
+ion-content,
+:host{
+    --background: none !important;
+    background: var(--ion-background-webkit);
+    background: var(--ion-background-gecko);
+}
+
+:host ion-header,
+:host, 
+ion-header .toolbar-background {
+    --ion-toolbar-background: none;
+    --border-style: unset !important;
+    --border-width: 0 !important;
+    --border-color: transparent !important;
+    --ion-toolbar-border-color: transparent;
+    --ion-border-color: transparent;
+}
+
+ion-item {
+    --ion-item-background: none;
+    --inner-border-width: 0;
+    border: none;
+}
+
+ion-grid ion-icon {
+    padding: 12px 6px;
+}
+
+ion-button {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.logo{
+    font-size: 25vh;
+    margin: 20px auto 30px auto;
+}
+
+h1, h6 {
+    color: white;
+    width: 100%;
+}
+
+.rowStyle {
+    background-color: white;
+    padding-left: 10px;
+    border-radius: 30px;
+    margin-top: 10px;
+}
+
+.button-secondary.ion-color-light{
+    color:var(--ion-color-secondary-contrast);
+}
+
+    
