@@ -24,7 +24,7 @@ export class AlertService {
   }
 
   async presentErrorAlert(message: string) {
-    return await this.presentAlert('Ocorreu um erro.', message);
+    return await this.presentAlert('Atenção.', message);
   }
 
   async presentAlertWithCallback(title: string, message: string): Promise<boolean> {

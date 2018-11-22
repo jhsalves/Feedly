@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupPage } from './signup/signup.page';
 import { environment } from 'src/environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
      AngularFireModule.initializeApp(environment.firebaseConfig),
      AngularFireDatabaseModule,
      AngularFireAuthModule,
+     AngularFirestoreModule,
      FormsModule,
      ReactiveFormsModule
     ],
