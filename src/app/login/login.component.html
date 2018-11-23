@@ -16,27 +16,28 @@
       <h6>an app for continuous feed</h6>
     </h1>
   </ion-item>
-
   <ion-grid style="width: 75%;">
-    <ion-row class="rowStyle">
-      <ion-icon name="mail" color="danger"></ion-icon>
-      <ion-input type="email" placeholder="your email"></ion-input>
-    </ion-row>
 
-    <ion-row class="rowStyle">
-      <ion-icon name="key" color="danger"></ion-icon>
-      <ion-input type="password" placeholder="your password"></ion-input>
-    </ion-row>
+    <form novalidate [formGroup]="signInForm" (ngSubmit)="signIn()">
+      <ion-row class="rowStyle">
+        <ion-icon name="mail" color="danger"></ion-icon>
+        <ion-input type="email" placeholder="your email" formControlName="email"></ion-input>
+      </ion-row>
 
-    <ion-row>
-      <ion-button align-center size="block" shape="round" fill="outline" color="light" style="width: 100%; margin-top: 20px;">Login</ion-button>
-    </ion-row>
+      <ion-row class="rowStyle">
+        <ion-icon name="key" color="danger"></ion-icon>
+        <ion-input type="password" placeholder="your password" formControlName="password"></ion-input>
+      </ion-row>
 
+      <ion-row>
+        <ion-button align-center size="block" type="submit" shape="round" fill="outline" color="light" style="width: 100%; margin-top: 20px;">Login</ion-button>
+      </ion-row>
+    </form>
   </ion-grid>
-<ion-item>
+  <ion-item>
     <ion-button fill="secondary" color="light" (click)="goToSignup()">
-    Don't have an account? Sign Up
-  </ion-button>
-</ion-item>
+      Don't have an account? Sign Up
+    </ion-button>
+  </ion-item>
 
 </ion-content>

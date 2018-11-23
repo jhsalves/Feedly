@@ -65,6 +65,9 @@ export class AuthService {
 
       return userRef.set(appUser);
     });
+  }
 
+  async SignIn(credentials: any){
+    return await this.fireAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
   }
 }
