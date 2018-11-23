@@ -5,6 +5,7 @@ import { AuthService } from '../core/auth.service';
 import { User } from '../models/User';
 import { AlertService } from '../core/alert.service';
 import { debug } from 'util';
+import { ToastService } from '../core/toast.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class SignupPage implements OnInit {
   constructor(private router: Router,
               private fb: FormBuilder,
               private authService: AuthService,
-              private alerts: AlertService) { }
+              private toasts: ToastService) { }
 
   ngOnInit() {
     this.createRegisterForm();
@@ -49,16 +50,16 @@ export class SignupPage implements OnInit {
     if(this.registerForm.valid){
       const user: User = Object.assign({}, this.registerForm.value);
       this.authService.emailSignUp(user).then(() => {
-        this.alerts.presentAlert('Parabéns', 'Seu cadastro foi feito com sucesso').then(() => {
+        this.toasts.presentErrorToast('Seu cadastro foi feito com sucesso').then(() => {
           this.router.navigateByUrl('/login');
         });
       }).catch(() => {
-        this.alerts.presentErrorAlert('O cadastro falhou. Verifique se esse e-mail já não está cadastrado.');
+        this.toasts.presentToast('Verifique se esse e-mail está cadastrado.');
       });
     }else if(this.registerForm.get("password").errors){
-      this.alerts.presentErrorAlert('Informe uma senha com 6 ou mais caracteres.');
+      this.toasts.presentErrorToast('A senha é de 6 ou mais caracteres.');
     }else if(this.registerForm.get("email").errors){
-      this.alerts.presentErrorAlert('Informe um e-mail válido.');
+      this.toasts.presentErrorToast('Informe um e-mail válido.');
     }
   }
 
