@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { AuthService } from '../core/auth.service';
-import { User } from '../models/User';
-import { AlertService } from '../core/alert.service';
-import { debug } from 'util';
-import { ToastService } from '../core/toast.service';
+import { AuthService } from '../../core/auth.service';
+import { User } from '../../models/User';
+import { ToastService } from '../../core/toast.service';
 
 
 @Component({

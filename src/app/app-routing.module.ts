@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { SignupPage } from './signup/signup.page';
+import { SignupPage } from './pages/signup/signup.page';
+import { LoginPage } from './pages/login/login.page';
+import { FeedPage } from './pages/feed/feed.page';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'signup', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent},
-  { path: 'home', loadChildren: './home/home.module#HomePageModule' },
+  { path: '', redirectTo: 'feed', pathMatch: 'full' },
+  { path: 'login', component: LoginPage},
   { path: 'signup', component: SignupPage },
+  { path: 'feed', component: FeedPage }
 ];
 
 @NgModule({

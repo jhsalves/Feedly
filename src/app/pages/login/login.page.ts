@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../core/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { User } from '../models/User';
-import { ToastService } from '../core/toast.service';
+import { User } from '../../models/User';
+import { ToastService } from '../../core/toast.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginPage implements OnInit {
 
   signInForm: FormGroup;
   userCredentials: User;
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
       this.userCredentials = Object.assign({}, this.signInForm.value);
       this.authService.SignIn(this.userCredentials).then(() => {
         this.toastService.presentSuccessToast('Login bem sucedido.').then(() => {
-          this.router.navigateByUrl('home');
+          this.router.navigateByUrl('/feed');
         });
       }).catch(error => {
         console.log(error);
@@ -59,13 +59,6 @@ export class LoginComponent implements OnInit {
           this.toastService.presentLightErrorToast('Ocorreu um erro na autenticação.');
         }
       });
-      // if(){
-      //   this.toastService.presentSuccessToast('Login bem sucedido.').then(() => {
-      //     this.router.navigateByUrl('home');
-      //   });
-      // }else{
-      //   this.toastService.presentLightErrorToast('Email ou senha incorretos.');
-      // }
     } else {
       this.toastService.presentLightErrorToast('Preencha com suas credenciais.')
     }

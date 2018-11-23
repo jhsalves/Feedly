@@ -11,16 +11,16 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { LoginComponent } from './login/login.component';
-import { SignupPage } from './signup/signup.page';
+import { LoginPage } from './pages/login/login.page';
+import { SignupPage } from './pages/signup/signup.page';
 import { environment } from 'src/environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-
+import { FeedPage } from './pages/feed/feed.page';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, SignupPage],
-  entryComponents: [LoginComponent, SignupPage],
+  declarations: [AppComponent, LoginPage, SignupPage, FeedPage],
+  entryComponents: [LoginPage, SignupPage, FeedPage],
   imports: [BrowserModule,
      IonicModule.forRoot(),
      AppRoutingModule,
