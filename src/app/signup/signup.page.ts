@@ -50,16 +50,16 @@ export class SignupPage implements OnInit {
     if(this.registerForm.valid){
       const user: User = Object.assign({}, this.registerForm.value);
       this.authService.emailSignUp(user).then(() => {
-        this.toasts.presentErrorToast('Seu cadastro foi feito com sucesso').then(() => {
+        this.toasts.presentLightErrorToast('Seu cadastro foi feito com sucesso').then(() => {
           this.router.navigateByUrl('/login');
         });
       }).catch(() => {
-        this.toasts.presentToast('Verifique se esse e-mail está cadastrado.');
+        this.toasts.presentToast('Esse e-mail pode já estar cadastrado.');
       });
     }else if(this.registerForm.get("password").errors){
-      this.toasts.presentErrorToast('A senha é de 6 ou mais caracteres.');
+      this.toasts.presentLightErrorToast('A senha é de 6 ou mais caracteres.');
     }else if(this.registerForm.get("email").errors){
-      this.toasts.presentErrorToast('Informe um e-mail válido.');
+      this.toasts.presentLightErrorToast('Informe um e-mail válido.');
     }
   }
 

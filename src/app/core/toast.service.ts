@@ -37,4 +37,8 @@ export class ToastService {
   async presentErrorToast(message){
     await this.presentToast(message, 2000, 'medium');
   }
+
+  async presentLightErrorToast(message){
+    await this.presentToast(message, 2000, 'light');
+  }
 }
