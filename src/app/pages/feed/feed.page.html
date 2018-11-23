@@ -1,9 +1,59 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>feed</ion-title>
+    <ion-title color="light" slot="start">Seu feed</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear">
+        <ion-icon name="log-out" color="light" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+
+  <ion-row class="rowStyle">
+    <ion-button color="primary" color="danger" fill="clear">
+      <ion-icon slot="icon-only" name="images"></ion-icon>
+    </ion-button>
+
+    <ion-input type="text" placeholder="Diga algo..."> </ion-input>
+
+    <ion-button color="danger" fill="clear">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
+
+  </ion-row>
+
+  <ion-card>
+
+    <ion-item-divider text-light color="danger">
+      Bob Says
+    </ion-item-divider>
+
+    <ion-item text-wrap>
+      I am so happy and excited about developing Feedly using Ionic and Firebase!
+    </ion-item>
+
+    <ion-row class="bottom-bar" color="light">
+      <ion-col>
+        <ion-button expand="block" fill="clear" size="small" color="danger" class="border-right">
+          <ion-icon name="thumbs-up"></ion-icon>
+          <small>12 Likes</small>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" fill="clear" size="small" color="danger" class="border-right">
+          <ion-icon name="text"></ion-icon>
+          <small>12 Comments</small>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" fill="clear" size="small" color="danger">
+          <small>12 mins ago</small>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
 
 </ion-content>

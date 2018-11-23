@@ -1,0 +1,22 @@
+ion-header{
+    --ion-toolbar-background: 'none' !important;
+    background: var(--app-background);   
+}
+
+.rowStyle {
+    border: solid var(--app-background) 1px;
+    border-radius: 30px;
+    margin: 0px 10px 0 10px;
+}
+
+ion-item-divider {
+    background: var(--app-background);
+}
+
+.border-right {
+    border-right: 1px solid var(--ion-color-medium-contrast);
+}
+
+.bottom-bar{
+    background: var(--ion-color-light);
+}
