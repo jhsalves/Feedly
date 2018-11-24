@@ -16,9 +16,9 @@
       <ion-icon slot="icon-only" name="images"></ion-icon>
     </ion-button>
 
-    <ion-input type="text" placeholder="Diga algo..."> </ion-input>
+    <ion-input type="text" [(ngModel)]="text" placeholder="Diga algo..."> </ion-input>
 
-    <ion-button color="danger" fill="clear">
+    <ion-button color="danger" fill="clear" (click)="postMessage()">
       <ion-icon slot="icon-only" name="send"></ion-icon>
     </ion-button>
 
