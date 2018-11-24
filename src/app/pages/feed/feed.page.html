@@ -24,14 +24,14 @@
 
   </ion-row>
 
-  <ion-card>
+  <ion-card *ngFor="let feed of feeds | async">
 
     <ion-item-divider text-light color="danger">
-      Bob Says
+      {{feed.ownerName}} Says
     </ion-item-divider>
 
     <ion-item text-wrap>
-      I am so happy and excited about developing Feedly using Ionic and Firebase!
+      {{feed.text}}
     </ion-item>
 
     <ion-row class="bottom-bar" color="light">
@@ -49,7 +49,7 @@
       </ion-col>
       <ion-col>
         <ion-button expand="block" fill="clear" size="small" color="danger">
-          <small>12 mins ago</small>
+          <small>{{ feed.createdAt | timeAgo }}</small>
         </ion-button>
       </ion-col>
     </ion-row>

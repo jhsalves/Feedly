@@ -5,6 +5,7 @@ import { User } from 'src/app/models/User';
 import { ToastService } from 'src/app/core/toast.service';
 import { FeedService } from 'src/app/core/feed.service';
 import { Feed } from 'src/app/models/Feed';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-feed',
@@ -15,6 +16,7 @@ export class FeedPage implements OnInit {
 
   text: string;
   user: User;
+  feeds: Observable<Feed[]>;
 
   constructor(private authService: AuthService, private feedService: FeedService, private toastService: ToastService) { }
 
@@ -23,21 +25,24 @@ export class FeedPage implements OnInit {
       this.user = u;
     });
 
+    this.feeds = this.feedService.getFeeds();
+    console.log(this.feeds);
   }
 
-  postMessage(){
-    const feed : Feed = {
+  postMessage() {
+    firestore.FieldValue;
+    const feed: Feed = {
       text: this.text,
-      createdAt: firestore.FieldValue.serverTimestamp(),
+      createdAt: Date.now(),
       owner: this.user.uid,
       ownerName: this.user.name
     };
     this.feedService.addFeed(feed).then(result => {
       this.toastService.presentSuccessToast('Sua mensagem foi postada.');
-  }).catch(error => {
+    }).catch(error => {
       this.toastService.presentErrorToast('Erro ao postar sua mensagem.');
       console.log(error);
-  });
+    });
 
 
   }

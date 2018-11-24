@@ -17,9 +17,11 @@ import { environment } from 'src/environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { FeedPage } from './pages/feed/feed.page';
+import {TimeAgoPipe} from 'time-ago-pipe';
+
 
 @NgModule({
-  declarations: [AppComponent, LoginPage, SignupPage, FeedPage],
+  declarations: [AppComponent, LoginPage, SignupPage, FeedPage, TimeAgoPipe],
   entryComponents: [LoginPage, SignupPage, FeedPage],
   imports: [BrowserModule,
      IonicModule.forRoot(),

@@ -11,7 +11,8 @@ export const environment = {
       databaseURL: "https://feedlyapp-1a300.firebaseio.com",
       projectId: "feedlyapp-1a300",
       storageBucket: "feedlyapp-1a300.appspot.com",
-      messagingSenderId: "620631438712"
+      messagingSenderId: "620631438712",
+      timestampsInSnapshots: true
     }
 };
 
