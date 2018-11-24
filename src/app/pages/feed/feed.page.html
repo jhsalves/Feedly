@@ -24,14 +24,14 @@
 
   </ion-row>
 
-  <ion-card *ngFor="let feed of feeds | async">
+  <ion-card *ngFor="let post of posts | async">
 
     <ion-item-divider text-light color="danger">
-      {{feed.ownerName}} Says
+      {{post.ownerName}} Says
     </ion-item-divider>
 
     <ion-item text-wrap>
-      {{feed.text}}
+      {{post.text}}
     </ion-item>
 
     <ion-row class="bottom-bar" color="light">
@@ -49,11 +49,14 @@
       </ion-col>
       <ion-col>
         <ion-button expand="block" fill="clear" size="small" color="danger">
-          <small>{{ feed.createdAt | timeAgo }}</small>
+          <small>{{ post.createdAt | timeAgo }}</small>
         </ion-button>
       </ion-col>
     </ion-row>
 
   </ion-card>
 
+  <ion-infinite-scroll threshold="20%" (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

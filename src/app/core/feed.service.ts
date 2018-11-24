@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap, take } from 'rxjs/operators';
 import { Post } from '../models/Post';
 
 @Injectable({
@@ -9,48 +9,91 @@ import { Post } from '../models/Post';
 })
 export class FeedService {
 
-  
+  private _posts$ = new BehaviorSubject<Post[]>([]);
+  pageSize = 10;
+  lastKey: number;
+  finished = false;
+  orderField = 'createdAt';
 
-  private FeedsCollection: AngularFirestoreCollection<Post>;
- 
-  private Feeds: Observable<Post[]>;
-  private _movies$ = new BehaviorSubject<Post[]>([]); // 1
-  batch = 2; // 2
-  lastKey = ''; // 3
-  finished = false; // 4
- 
-  constructor(db: AngularFirestore) {
-    this.FeedsCollection = db.collection<Post>('posts', ref => ref.orderBy('createdAt', 'desc'));
- 
-    this.Feeds = this.FeedsCollection.snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data();
-          const id = a.payload.doc.id;
-          let post = { id, ...data };
-          return post;
-        });
+  constructor(private db: AngularFirestore) {
+    this.nextPage()
+      .pipe(take(1))
+      .subscribe();
+  }
+
+  get posts$(): Observable<Post[]> {
+    return this._posts$.asObservable();
+  }
+
+  mapListKeys<T>(list: AngularFirestoreCollection<T>): Observable<T[]> {
+    return list
+      .snapshotChanges().pipe(
+        map(actions => {
+          return actions.map(a => {
+            const data = a.payload.doc.data() as any;
+            const id = a.payload.doc.id;
+            const post = { id, ...data };
+            return post;
+          });
+        })
+      );
+  }
+
+  getPost(id) {
+    return this.db.collection('posts').doc<Post>(id).valueChanges();
+  }
+
+  get postsList() {
+    return this.getPosts();
+  }
+
+  private getPosts(pageSize = 10): Observable<Post[]> {
+    return this.mapListKeys<Post>(
+      this.db.collection('posts', ref => {
+        const query = ref
+          .orderBy(this.orderField, 'desc')
+          .limit(pageSize);
+
+        return (this.lastKey)
+          ? query.startAt(this.lastKey)
+          : query;
       })
     );
   }
- 
-  public getFeeds() {
-    return this.Feeds;
+
+  nextPage(): Observable<Post[]> {
+    if (this.finished) { return this.posts$; }
+
+    return this.getPosts(this.pageSize + 1)
+      .pipe(
+        tap(posts => {
+
+          this.lastKey = posts[posts.length - 1][this.orderField];
+
+          const newPosts = posts.slice(0, this.pageSize); 
+
+          const currentPosts = this._posts$.getValue();
+
+          this.finished = this.lastKey == newPosts[newPosts.length - 1][this.orderField];
+
+          this._posts$.next(currentPosts.concat(newPosts));
+        })
+      );
   }
- 
-  getFeed(id) {
-    return this.FeedsCollection.doc<Post>(id).valueChanges();
-  }
- 
+
   updateFeed(feed: Post, id: string) {
-    return this.FeedsCollection.doc(id).update(feed);
+    return this.db.collection('posts').doc(id).update(feed);
   }
- 
-  public async addFeed(feed: Post) {
-    return await this.FeedsCollection.add(feed);
+
+  public async addPost(feed: Post) {
+    const docReference = await this.db.collection('posts').add(feed);
+    this.getPost(docReference.id).subscribe(doc => {
+      const currentPosts = this._posts$.getValue();
+      this._posts$.next([doc].concat(currentPosts));
+    });
   }
- 
-  removeFeed(id) {
-    return this.FeedsCollection.doc(id).delete();
+
+  async removeFeed(id) {
+    return await this.db.collection('posts').doc(id).delete();
   }
 }

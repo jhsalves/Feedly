@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/core/toast.service';
 import { FeedService } from 'src/app/core/feed.service';
 import { Post } from 'src/app/models/Post';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-feed',
@@ -16,35 +17,56 @@ export class FeedPage implements OnInit {
 
   text: string;
   user: User;
-  feeds: Observable<Post[]>;
+  posts: Observable<Post[]>;
 
-  constructor(private authService: AuthService, private feedService: FeedService, private toastService: ToastService) { }
-
-  ngOnInit() {
+  constructor(private authService: AuthService, private feedService: FeedService, private toastService: ToastService) {
     this.authService.user.subscribe(u => {
       this.user = u;
     });
+  }
 
-    this.feeds = this.feedService.getFeeds();
-    console.log(this.feeds);
+  ngOnInit() {
+    this.posts = this.feedService.posts$;
+  }
+
+  ionViewDidLoad() {
+    this.posts = this.feedService.posts$;
   }
 
   postMessage() {
     firestore.FieldValue;
-    const feed: Post = {
+    const post: Post = {
       text: this.text,
       createdAt: Date.now(),
       owner: this.user.uid,
       ownerName: this.user.name
     };
-    this.feedService.addFeed(feed).then(result => {
+    this.feedService.addPost(post).then(result => {
       this.toastService.presentSuccessToast('Sua mensagem foi postada.');
     }).catch(error => {
       this.toastService.presentErrorToast('Erro ao postar sua mensagem.');
       console.log(error);
     });
+  }
 
+  doInfinite(event): Promise<void> {
+    setTimeout(() => {
+      event.target.complete();
+      if (!this.feedService.finished) {
+        return new Promise((resolve, reject) => {
+          this.feedService.nextPage() // 3
+            .pipe(take(1))
+            .subscribe(() => {
+              resolve();
+            });
+        });
+      }
 
+      if (this.feedService.finished) {
+        event.target.disabled = true;
+      }
+    }, 500);
+    return Promise.resolve();
   }
 
 }
