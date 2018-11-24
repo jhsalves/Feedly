@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/core/auth.service';
 import { User } from 'src/app/models/User';
 import { ToastService } from 'src/app/core/toast.service';
 import { FeedService } from 'src/app/core/feed.service';
-import { Feed } from 'src/app/models/Feed';
+import { Post } from 'src/app/models/Post';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,7 +16,7 @@ export class FeedPage implements OnInit {
 
   text: string;
   user: User;
-  feeds: Observable<Feed[]>;
+  feeds: Observable<Post[]>;
 
   constructor(private authService: AuthService, private feedService: FeedService, private toastService: ToastService) { }
 
@@ -31,7 +31,7 @@ export class FeedPage implements OnInit {
 
   postMessage() {
     firestore.FieldValue;
-    const feed: Feed = {
+    const feed: Post = {
       text: this.text,
       createdAt: Date.now(),
       owner: this.user.uid,

@@ -1,20 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Feed } from '../models/Feed';
+import { Post } from '../models/Post';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeedService {
 
-  private FeedsCollection: AngularFirestoreCollection<Feed>;
+  
+
+  private FeedsCollection: AngularFirestoreCollection<Post>;
  
-  private Feeds: Observable<Feed[]>;
+  private Feeds: Observable<Post[]>;
+  private _movies$ = new BehaviorSubject<Post[]>([]); // 1
+  batch = 2; // 2
+  lastKey = ''; // 3
+  finished = false; // 4
  
   constructor(db: AngularFirestore) {
-    this.FeedsCollection = db.collection<Feed>('Feeds', ref => ref.orderBy('createdAt', 'desc'));
+    this.FeedsCollection = db.collection<Post>('posts', ref => ref.orderBy('createdAt', 'desc'));
  
     this.Feeds = this.FeedsCollection.snapshotChanges().pipe(
       map(actions => {
@@ -33,14 +39,14 @@ export class FeedService {
   }
  
   getFeed(id) {
-    return this.FeedsCollection.doc<Feed>(id).valueChanges();
+    return this.FeedsCollection.doc<Post>(id).valueChanges();
   }
  
-  updateFeed(feed: Feed, id: string) {
+  updateFeed(feed: Post, id: string) {
     return this.FeedsCollection.doc(id).update(feed);
   }
  
-  public async addFeed(feed: Feed) {
+  public async addFeed(feed: Post) {
     return await this.FeedsCollection.add(feed);
   }
  
