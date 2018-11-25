@@ -70,4 +70,8 @@ export class AuthService {
   async SignIn(credentials: any){
     return await this.fireAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
   }
+
+  async LogOut(){
+    return await this.fireAuth.auth.signOut();
+  }
 }

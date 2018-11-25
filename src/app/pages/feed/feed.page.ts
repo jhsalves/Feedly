@@ -7,6 +7,8 @@ import { FeedService } from 'src/app/core/feed.service';
 import { Post } from 'src/app/models/Post';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
@@ -20,27 +22,43 @@ export class FeedPage implements OnInit {
   posts: Observable<Post[]>;
   infiniteEvent: any;
 
-  constructor(private authService: AuthService, private feedService: FeedService, private toastService: ToastService) {
+  constructor(private authService: AuthService,
+     private feedService: FeedService,
+      private toastService: ToastService,
+      private loader: LoadingController,
+      private router: Router) {
     this.authService.user.subscribe(u => {
       this.user = u;
     });
   }
 
-  ngOnInit() {
-    this.posts = this.feedService.posts$;
+  async ngOnInit() {
+    const loadingElement = await this.loader.create({
+      message: 'Aguarde...',
+      duration: 2000
+    });
+    await loadingElement.present().then(() => {
+      this.feedService.nextPage()
+      .pipe(take(1))
+      .subscribe(async () => {
+        this.posts = this.feedService.posts$;
+        await loadingElement.dismiss();
+      });
+    });
   }
 
-  ionViewDidLoad() {
-    this.posts = this.feedService.posts$;
-  }
-
-  postMessage() {
+  async postMessage() {
     const post: Post = {
       text: this.text,
       createdAt: Date.now(),
       owner: this.user.uid,
       ownerName: this.user.name
     };
+    const loadingElement = await this.loader.create({
+      message: 'Aguarde...',
+      duration: 2000
+    });
+    await loadingElement.present();
     this.feedService.addPost(post).then(result => {
       this.text = "";
       this.toastService.presentSuccessToast('Sua mensagem foi postada.');
@@ -48,6 +66,7 @@ export class FeedPage implements OnInit {
       this.toastService.presentErrorToast('Erro ao postar sua mensagem.');
       console.log(error);
     });
+    await loadingElement.dismiss();
   }
 
   doInfinite(event): Promise<void> {
@@ -79,4 +98,11 @@ export class FeedPage implements OnInit {
       }
   }
 
+  logOut(){
+    this.authService.LogOut().then(() => {
+      this.router.navigateByUrl('/login');
+    }).catch(() => {
+      this.toastService.presentLightErrorToast('Você não está logado.');
+    });
+  }
 }

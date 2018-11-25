@@ -16,9 +16,6 @@ export class FeedService {
   orderField = 'createdAt';
 
   constructor(private db: AngularFirestore) {
-    this.nextPage()
-      .pipe(take(1))
-      .subscribe();
   }
 
   get posts$(): Observable<Post[]> {

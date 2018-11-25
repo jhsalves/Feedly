@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../core/auth.service';
 import { User } from '../../models/User';
 import { ToastService } from '../../core/toast.service';
+import { LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class SignupPage implements OnInit {
   constructor(private router: Router,
               private fb: FormBuilder,
               private authService: AuthService,
-              private toasts: ToastService) { }
+              private toasts: ToastService,
+              private loader: LoadingController) { }
 
   ngOnInit() {
     this.createRegisterForm();
@@ -44,16 +46,24 @@ export class SignupPage implements OnInit {
     );
   }
 
-  signUp(){
+  async signUp(){
     if(this.registerForm.valid){
       const user: User = Object.assign({}, this.registerForm.value);
-      this.authService.emailSignUp(user).then(() => {
-        this.toasts.presentLightErrorToast('Seu cadastro foi feito com sucesso').then(() => {
-          this.router.navigateByUrl('/login');
-        });
-      }).catch(() => {
-        this.toasts.presentToast('Esse e-mail pode já estar cadastrado.');
+      const loadingElement = await this.loader.create({
+        message: 'Aguarde...',
+        duration: 2000
       });
+      await loadingElement.present().then(() => {
+        this.authService.emailSignUp(user).then(() => {
+          this.toasts.presentLightErrorToast('Seu cadastro foi feito com sucesso').then(async () => {
+            this.router.navigateByUrl('/login');
+          });
+        }).catch(async () => {
+          this.toasts.presentToast('Esse e-mail pode já estar cadastrado.');
+        }).finally(async () => {
+          await loadingElement.dismiss();
+        });
+      })
     }else if(this.registerForm.get("password").errors){
       this.toasts.presentLightErrorToast('A senha é de 6 ou mais caracteres.');
     }else if(this.registerForm.get("email").errors){
