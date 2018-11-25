@@ -11,7 +11,7 @@ export class FeedService {
 
   private _posts$ = new BehaviorSubject<Post[]>([]);
   pageSize = 10;
-  lastKey: number;
+  lastKey: any;
   finished = false;
   orderField = 'createdAt';
 
@@ -95,5 +95,14 @@ export class FeedService {
 
   async removeFeed(id) {
     return await this.db.collection('posts').doc(id).delete();
+  }
+
+  public resetPosts() {
+    this._posts$ = new BehaviorSubject<Post[]>([]);
+    this.lastKey = null;
+    this.finished = false;
+    this.nextPage()
+    .pipe(take(1))
+    .subscribe();
   }
 }

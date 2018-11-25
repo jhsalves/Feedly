@@ -18,6 +18,7 @@ export class FeedPage implements OnInit {
   text: string;
   user: User;
   posts: Observable<Post[]>;
+  infiniteEvent: any;
 
   constructor(private authService: AuthService, private feedService: FeedService, private toastService: ToastService) {
     this.authService.user.subscribe(u => {
@@ -34,7 +35,6 @@ export class FeedPage implements OnInit {
   }
 
   postMessage() {
-    firestore.FieldValue;
     const post: Post = {
       text: this.text,
       createdAt: Date.now(),
@@ -42,6 +42,7 @@ export class FeedPage implements OnInit {
       ownerName: this.user.name
     };
     this.feedService.addPost(post).then(result => {
+      this.text = "";
       this.toastService.presentSuccessToast('Sua mensagem foi postada.');
     }).catch(error => {
       this.toastService.presentErrorToast('Erro ao postar sua mensagem.');
@@ -53,20 +54,29 @@ export class FeedPage implements OnInit {
     setTimeout(() => {
       event.target.complete();
       if (!this.feedService.finished) {
+        event.target.disabled = false;
         return new Promise((resolve, reject) => {
-          this.feedService.nextPage() // 3
+          this.feedService.nextPage()
             .pipe(take(1))
             .subscribe(() => {
               resolve();
             });
         });
-      }
-
-      if (this.feedService.finished) {
+      }else{
+        this.infiniteEvent = event;
         event.target.disabled = true;
       }
     }, 500);
     return Promise.resolve();
+  }
+
+  refresh(event){
+      this.feedService.resetPosts();
+      this.posts = this.feedService.posts$;
+      event.target.complete();
+      if(this.infiniteEvent){
+        this.infiniteEvent.target.disabled = false;
+      }
   }
 
 }
