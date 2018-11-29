@@ -10,9 +10,10 @@
 </ion-header>
 
 <ion-content padding>
+  <app-progress-bar *ngIf="upload && upload.progress" [value]="upload.progress"></app-progress-bar>
 
   <ion-row class="rowStyle">
-    <ion-button color="primary" color="danger" fill="clear">
+    <ion-button color="primary" color="danger" (click)="addPhoto()" fill="clear">
       <ion-icon slot="icon-only" name="images"></ion-icon>
     </ion-button>
 
@@ -22,6 +23,12 @@
       <ion-icon slot="icon-only" name="send"></ion-icon>
     </ion-button>
 
+  </ion-row>
+
+  <ion-row margin class="rowStyle image-preview" *ngIf="image">
+    <ion-card shape="round" class="round-corners">
+      <img [src] = "image" class="round-corners">
+    </ion-card>
   </ion-row>
 
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
@@ -37,6 +44,8 @@
     <ion-item text-wrap>
       {{post.text}}
     </ion-item>
+
+    <img *ngIf="post.image" [src]="post.image">
 
     <ion-row class="bottom-bar" color="light">
       <ion-col>

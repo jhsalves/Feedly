@@ -67,7 +67,7 @@ export class FeedService {
 
           this.lastKey = posts[posts.length - 1][this.orderField];
 
-          const newPosts = posts.slice(0, this.pageSize); 
+          const newPosts = posts.slice(0, this.pageSize);
 
           const currentPosts = this._posts$.getValue();
 
@@ -78,7 +78,7 @@ export class FeedService {
       );
   }
 
-  updateFeed(feed: Post, id: string) {
+  updateFeed(feed: Object, id: string) {
     return this.db.collection('posts').doc(id).update(feed);
   }
 
@@ -87,6 +87,9 @@ export class FeedService {
     this.getPost(docReference.id).subscribe(doc => {
       const currentPosts = this._posts$.getValue();
       this._posts$.next([doc].concat(currentPosts));
+    });
+    return new Promise((resolve, reject) => {
+      return resolve(docReference)
     });
   }
 
@@ -99,7 +102,7 @@ export class FeedService {
     this.lastKey = null;
     this.finished = false;
     this.nextPage()
-    .pipe(take(1))
-    .subscribe();
+      .pipe(take(1))
+      .subscribe();
   }
 }

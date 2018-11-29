@@ -1,0 +1,20 @@
+.progress, progress[value] {
+    width:              100%;
+    border:             none;
+    margin:             5px 0;
+    height:             5px;
+    display:            block;
+    appearance:         none;
+    -webkit-appearance: none;
+    &::-webkit-progress-bar {
+      background-color: var(--ion-color-primary-tint);
+    }
+    &::-webkit-progress-value {
+      background-color: var(--ion-color-primary);
+    }
+  }
+
+.progress-container {
+    width: 96%;
+    margin: 0 auto;
+}

@@ -15,13 +15,16 @@ import { LoginPage } from './pages/login/login.page';
 import { SignupPage } from './pages/signup/signup.page';
 import { environment } from 'src/environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore';
 import { FeedPage } from './pages/feed/feed.page';
-import {TimeAgoPipe} from 'time-ago-pipe';
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { Camera } from '@ionic-native/camera/ngx';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
 
 @NgModule({
-  declarations: [AppComponent, LoginPage, SignupPage, FeedPage, TimeAgoPipe],
+  declarations: [AppComponent, LoginPage, SignupPage, FeedPage, TimeAgoPipe, ProgressBarComponent],
   entryComponents: [LoginPage, SignupPage, FeedPage],
   imports: [BrowserModule,
      IonicModule.forRoot(),
@@ -36,7 +39,9 @@ import {TimeAgoPipe} from 'time-ago-pipe';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    Camera,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    AngularFireStorage
   ],
   bootstrap: [AppComponent]
 })
