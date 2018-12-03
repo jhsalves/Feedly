@@ -1,6 +1,8 @@
 export interface Post{
+    id?: string,
     createdAt: number,
     owner: string,
     ownerName: string,
-    text: string
+    text: string,
+    likes?: boolean[]
 }

@@ -12,6 +12,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { UploadService } from 'src/app/core/upload.service';
 import { Upload } from 'src/app/models/Upload';
 import { DocumentReference } from 'angularfire2/firestore';
+import { Like } from 'src/app/models/Like';
+import { LikeService } from 'src/app/core/like.service';
 
 @Component({
   selector: 'app-feed',
@@ -35,7 +37,8 @@ export class FeedPage implements OnInit {
     private router: Router,
     private actionSheet: ActionSheetController,
     private camera: Camera,
-    private uploadService: UploadService) {
+    private uploadService: UploadService,
+    private likeService: LikeService) {
     this.authService.user.subscribe(u => {
       this.user = u;
     });
@@ -188,5 +191,14 @@ export class FeedPage implements OnInit {
 
     await actionSheet.present();
 
+  }
+
+  like(post){
+    const like = new Like(post, this.user.uid);
+    this.likeService.updateLike(like).subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    });
   }
 }

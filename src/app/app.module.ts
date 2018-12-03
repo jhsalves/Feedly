@@ -21,6 +21,7 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { Camera } from '@ionic-native/camera/ngx';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
      AngularFireAuthModule,
      AngularFirestoreModule,
      FormsModule,
-     ReactiveFormsModule
+     ReactiveFormsModule,
+     HttpClientModule
     ],
   providers: [
     StatusBar,
