@@ -14,6 +14,7 @@ export const environment = {
     messagingSenderId: "620631438712",
     timestampsInSnapshots: true
   },
+  //apiUrl: "http://localhost:8080/"
   apiUrl: "http://localhost:8010/feedlyapp-1a300/us-central1/"
 };
 

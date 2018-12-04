@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection, QuerySnapshot } from 'angularfire2/firestore';
+import { Observable, BehaviorSubject, of, Subject } from 'rxjs';
 import { map, tap, take } from 'rxjs/operators';
 import { Post } from '../models/Post';
 
@@ -9,13 +9,16 @@ import { Post } from '../models/Post';
 })
 export class FeedService {
 
-  private _posts$ = new BehaviorSubject<Post[]>([]);
+  protected _posts$ = new BehaviorSubject<Post[]>([]);
   pageSize = 10;
   lastKey: any;
   finished = false;
+  modifyingPost = false;
+  modifying: Subject<boolean> = new Subject<boolean>();
   orderField = 'createdAt';
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore,
+              private zone: NgZone) {
   }
 
   get posts$(): Observable<Post[]> {
@@ -44,18 +47,50 @@ export class FeedService {
     return this.getPosts();
   }
 
-  private getPosts(pageSize = 10): Observable<Post[]> {
-    return this.mapListKeys<Post>(
-      this.db.collection('posts', ref => {
-        const query = ref
-          .orderBy(this.orderField, 'desc')
-          .limit(pageSize);
+  private handlePostChanges(snapshot: QuerySnapshot<Post>) {
+    if(!this.modifyingPost){
+      return;
+    }
+    const changedPosts = snapshot.docChanges();
+    const currentPosts = this._posts$.getValue();
 
-        return (this.lastKey)
-          ? query.startAt(this.lastKey)
-          : query;
-      })
-    );
+    for (let change of changedPosts) {
+      let postId = change.doc.id;
+      const changedPost = change.doc.data() as Post;
+      if (change.type == 'added') {
+        currentPosts.unshift({id: postId, ...changedPost});
+      } else if (change.type == 'modified') {
+        currentPosts.forEach((post, index) => {
+          if (post.id == postId) {
+            currentPosts[index] = {id: postId, ...changedPost};
+          }
+        });
+      }else if (change.type == 'removed') {
+
+      }
+    }
+    this.zone.run(() => {});
+    this._posts$.next(currentPosts);
+    this.modifyingPost = false;
+    this.modifying.next(this.modifyingPost);
+  }
+
+  private getPosts(pageSize = 10): Observable<Post[]> {
+    const collection = this.db.collection<Post>('posts', ref => {
+      const query = ref
+        .orderBy(this.orderField, 'desc')
+        .limit(pageSize);
+
+      query.onSnapshot(this.handlePostChanges.bind(this));
+
+      return (this.lastKey)
+        ? query.startAt(this.lastKey)
+        : query;
+    });
+
+
+
+    return this.mapListKeys<Post>(collection);
   }
 
   nextPage(): Observable<Post[]> {
@@ -83,11 +118,8 @@ export class FeedService {
   }
 
   public async addPost(feed: Post) {
+    this.modifyingPost = true;
     const docReference = await this.db.collection('posts').add(feed);
-    this.getPost(docReference.id).subscribe(doc => {
-      const currentPosts = this._posts$.getValue();
-      this._posts$.next([doc].concat(currentPosts));
-    });
     return new Promise((resolve, reject) => {
       return resolve(docReference)
     });

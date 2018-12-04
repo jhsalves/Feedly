@@ -17,6 +17,8 @@ export class ToastService {
       position: 'top'
     });
     toast.present();
+
+    return toast;
   }
 
   async presentToastWithOptions(message, showCloseButton = true, closeButtonText = 'Done', position?, color?) {

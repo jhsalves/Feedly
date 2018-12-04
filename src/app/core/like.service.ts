@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Like as LikeObject } from '../models/Like';
 import { ILike } from '../models/ILike';
+import { FeedService } from './feed.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,26 +12,18 @@ export class LikeService {
   endpoint = environment.apiUrl + "updateLikesCount";
   httpOptions = {
     headers: new HttpHeaders({
-      'responseType': 'text',
-      'Content-Type': 'application/json'
-    })
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': "*"
+    }),
+    responseType : 'text' as 'json',
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private feedService: FeedService) { }
 
   updateLike(like: ILike) {
-    console.log(like as Object);
-    let body = {
-      title: 'foo',
-      body: 'bar',
-      userId: 1
-    };
-    return this.http.put(this.endpoint, {
-      "courseListIcon": "...",
-      "description": "TEST",
-      "iconUrl": "..",
-      "longDescription": "...",
-      "url": "new-url"
-    }, this.httpOptions);
+    this.feedService.modifyingPost = true;
+    const likeUpdate = this.http.post(this.endpoint, like, this.httpOptions);
+    return likeUpdate;
   }
 }

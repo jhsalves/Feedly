@@ -195,6 +195,15 @@ export class FeedPage implements OnInit {
 
   like(post){
     const like = new Like(post, this.user.uid);
+    this.feedService.modifyingPost = true;
+    if(like.action == 'like'){
+      this.feedService.modifying.subscribe((modifying) => {
+        if(!modifying){
+          console.log(like);
+          this.toastService.presentLightErrorToast('Você gostou do post.');
+        }
+      }); 
+    }
     this.likeService.updateLike(like).subscribe(response => {
       console.log(response);
     }, error => {
