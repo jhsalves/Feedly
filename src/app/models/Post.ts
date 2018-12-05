@@ -5,5 +5,6 @@ export interface Post{
     ownerName: string,
     text: string,
     likes?: boolean[],
-    likesCount?: number
+    likesCount?: number,
+    modifying?: boolean
 }

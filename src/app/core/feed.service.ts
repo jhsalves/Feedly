@@ -14,7 +14,7 @@ export class FeedService {
   lastKey: any;
   finished = false;
   modifyingPost = false;
-  modifying: Subject<boolean> = new Subject<boolean>();
+  modifiedPost : Subject<Post> = new Subject<Post>();
   orderField = 'createdAt';
 
   constructor(private db: AngularFirestore,
@@ -63,6 +63,7 @@ export class FeedService {
         currentPosts.forEach((post, index) => {
           if (post.id == postId) {
             currentPosts[index] = {id: postId, ...changedPost};
+            this.modifiedPost.next(currentPosts[index] as Post);
           }
         });
       }else if (change.type == 'removed') {
@@ -72,16 +73,16 @@ export class FeedService {
     this.zone.run(() => {});
     this._posts$.next(currentPosts);
     this.modifyingPost = false;
-    this.modifying.next(this.modifyingPost);
   }
 
   private getPosts(pageSize = 10): Observable<Post[]> {
     const collection = this.db.collection<Post>('posts', ref => {
+      
+      ref.onSnapshot(this.handlePostChanges.bind(this));
+      
       const query = ref
         .orderBy(this.orderField, 'desc')
         .limit(pageSize);
-
-      query.onSnapshot(this.handlePostChanges.bind(this));
 
       return (this.lastKey)
         ? query.startAt(this.lastKey)

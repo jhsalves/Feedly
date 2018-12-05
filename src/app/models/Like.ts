@@ -4,7 +4,7 @@ import { ILike } from "./ILike";
 export class Like implements ILike{
     userId : string;
 	postId : string;
-    action : string
+    action : 'like' | 'unlike';
     
     constructor(post: Post, uid: string) {
         if(!post.id){

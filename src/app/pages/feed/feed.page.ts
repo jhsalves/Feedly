@@ -5,7 +5,7 @@ import { ToastService } from 'src/app/core/toast.service';
 import { FeedService } from 'src/app/core/feed.service';
 import { Post } from 'src/app/models/Post';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, last, takeLast } from 'rxjs/operators';
 import { LoadingController, ActionSheetController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
@@ -28,6 +28,7 @@ export class FeedPage implements OnInit {
   user: User;
   posts: Observable<Post[]>;
   infiniteEvent: any;
+  likeAction = false;
 
   constructor(
     private authService: AuthService,
@@ -87,24 +88,25 @@ export class FeedPage implements OnInit {
   }
 
   private async postImage(doc: DocumentReference, loader: any) {
-      this.upload = new Upload(this.image, 'image/png');
-      this.upload.name = doc.id;
-      await this.uploadService.pushUpload(this.upload).then(async () => {
-        this.upload.progress.subscribe(progress => {
-          loader.setContent({
-            message: `${progress}% enviado%`
-          });
+    this.upload = new Upload(this.image, 'image/png');
+    this.upload.name = doc.id;
+    await this.uploadService.pushUpload(this.upload).then(async () => {
+      this.upload.progress.subscribe(progress => {
+        loader.setContent({
+          message: `${progress}% enviado%`
         });
-        this.upload.url.subscribe(url => {;
-          this.feedService.updateFeed({ image: url }, doc.id).then((x) => {
-            loader.dismiss();
-            return Promise.resolve(x);
-          }).catch(() => {
-            loader.dismiss();
-            Promise.reject();
-          });
-        })
+      });
+      this.upload.url.subscribe(url => {
+        ;
+        this.feedService.updateFeed({ image: url }, doc.id).then((x) => {
+          loader.dismiss();
+          return Promise.resolve(x);
+        }).catch(() => {
+          loader.dismiss();
+          Promise.reject();
+        });
       })
+    })
   }
 
   doInfinite(event): Promise<void> {
@@ -193,21 +195,21 @@ export class FeedPage implements OnInit {
 
   }
 
-  like(post){
+  like(post: Post) {
     const like = new Like(post, this.user.uid);
-    this.feedService.modifyingPost = true;
-    if(like.action == 'like'){
-      this.feedService.modifying.subscribe((modifying) => {
-        if(!modifying){
-          console.log(like);
+    post.modifying = true;
+    this.likeService.updateLike(like).subscribe((response) => {
+      this.feedService.modifyingPost = true;
+      this.feedService.modifiedPost.subscribe((emittedPost) => {
+        let likeData = new Like(emittedPost, this.user.uid);
+        if (like.action == 'like' && likeData.action == 'unlike') {
           this.toastService.presentLightErrorToast('Você gostou do post.');
         }
-      }); 
-    }
-    this.likeService.updateLike(like).subscribe(response => {
-      console.log(response);
+      });
     }, error => {
       console.log(error);
+    }, () => {
+      post.modifying = false;
     });
   }
 }
