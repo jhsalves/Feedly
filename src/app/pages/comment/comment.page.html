@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>comment {{id}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div class="comment-box">
+    <ion-card *ngFor="let comment of comments">
+      <ion-card-content>
+        <strong>{{comment.message}}</strong>
+        <p>
+          {{comment.timeStamp | date : 'H:mm a'}}
+        </p>
+      </ion-card-content>
+
+    </ion-card>
+  </div>
+  <ion-footer padding>
+    <ion-textarea [(ngModel)]="message" type="text" placeholder="Comment .... "></ion-textarea>
+    <ion-button size="small" float-right shape="round" (click)="sendComment()">Send</ion-button>
+  </ion-footer>
+</ion-content>

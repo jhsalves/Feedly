@@ -8,7 +8,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPage},
   { path: 'signup', component: SignupPage },
-  { path: 'feed', component: FeedPage }
+  { path: 'feed', component: FeedPage },
+  { path: 'comment', loadChildren: './pages/comment/comment.module#CommentPageModule' }
 ];
 
 @NgModule({
