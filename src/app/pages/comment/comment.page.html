@@ -1,23 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>comment {{id}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title color="light">Comentários</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
   <div class="comment-box">
-    <ion-card *ngFor="let comment of comments">
+    <ion-card *ngFor="let comment of comments | async">
       <ion-card-content>
-        <strong>{{comment.message}}</strong>
+        <strong>{{comment.text}} (postId: {{comment.postId}})</strong>
         <p>
-          {{comment.timeStamp | date : 'H:mm a'}}
+          {{comment.createdAt | date : 'H:mm a'}}
         </p>
       </ion-card-content>
 
     </ion-card>
+    <ion-infinite-scroll threshold="20%" (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </div>
   <ion-footer padding>
-    <ion-textarea [(ngModel)]="message" type="text" placeholder="Comment .... "></ion-textarea>
-    <ion-button size="small" float-right shape="round" (click)="sendComment()">Send</ion-button>
+    <ion-textarea [(ngModel)]="message" type="text" placeholder="Comment... "></ion-textarea>
+    <ion-button size="small" float-right shape="round" color="danger" (click)="sendComment()">Send</ion-button>
   </ion-footer>
 </ion-content>

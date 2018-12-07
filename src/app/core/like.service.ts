@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Like as LikeObject } from '../models/Like';
 import { ILike } from '../models/ILike';
 import { FeedService } from './feed.service';
 

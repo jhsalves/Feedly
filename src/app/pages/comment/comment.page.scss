@@ -1,0 +1,16 @@
+ion-header{
+    --ion-toolbar-background: 'none' !important;
+    background: var(--app-background);   
+}
+
+ion-textarea {
+    border-bottom: 1px solid #000000;
+    margin: 0px 5px;
+}
+p {
+    text-align: justify;
+}
+.comment-box {
+    overflow: scroll;
+    max-height: 400px;
+}

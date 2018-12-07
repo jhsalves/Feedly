@@ -89,8 +89,6 @@ export class FeedService {
         : query;
     });
 
-
-
     return this.mapListKeys<Post>(collection);
   }
 
@@ -118,12 +116,9 @@ export class FeedService {
     return this.db.collection('posts').doc(id).update(feed);
   }
 
-  public async addPost(feed: Post) {
+  public addPost(feed: Post) {
     this.modifyingPost = true;
-    const docReference = await this.db.collection('posts').add(feed);
-    return new Promise((resolve, reject) => {
-      return resolve(docReference)
-    });
+    return this.db.collection('posts').add(feed);
   }
 
   async removeFeed(id) {
