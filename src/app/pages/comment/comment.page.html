@@ -11,7 +11,7 @@
   <div class="comment-box">
     <ion-card *ngFor="let comment of comments | async">
       <ion-card-content>
-        <strong>{{comment.text}} (postId: {{comment.postId}})</strong>
+        <strong>{{comment.text}}</strong>
         <p>
           {{comment.createdAt | date : 'H:mm a'}}
         </p>

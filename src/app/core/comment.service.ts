@@ -32,7 +32,7 @@ export class CommentService {
           return actions.map(a => {
             const data = a.payload.doc.data() as any;
             const id = a.payload.doc.id;
-            const comment = { id, ...data };
+            const comment = { id: id, ...data };
             return comment;
           });
         })
@@ -57,11 +57,12 @@ export class CommentService {
     for (let change of changedComments) {
       let commentId = change.doc.id;
       const changedComment = change.doc.data() as Comment;
-      console.log(commentId);
-      if (change.type == 'added') {
-        console.log({ id: commentId, ...changedComment });
+      let docExists = changedComments.find(c => {
+        return c.doc.id == commentId;
+      });
+      if (change.type == 'added' && docExists == null) {
         currentComments.unshift({ id: commentId, ...changedComment });
-      } else if (change.type == 'modified') {
+      } else if (change.type == 'modified' && docExists != null) {
         currentComments.forEach((comment, index) => {
           if (comment.id == commentId) {
             currentComments[index] = { id: commentId, ...changedComment };
@@ -72,7 +73,7 @@ export class CommentService {
 
       }
     }
-    this.zone.run(() => { });
+    //this.zone.run(() => { });
     this._comments$.next(currentComments);
     this.modifyingComment = false;
   }
@@ -108,7 +109,7 @@ export class CommentService {
     return this.getComments(postId, this.pageSize + 1)
       .pipe(
         tap(comments => {
-          if(!comments.length){
+          if (!comments.length) {
             return;
           }
 
@@ -119,8 +120,16 @@ export class CommentService {
           const currentComments = this._comments$.getValue();
 
           this.finished = this.lastKey == newComments[newComments.length - 1][this.orderField];
-
-          this._comments$.next(currentComments.concat(newComments));
+          let commentsList = currentComments
+            .concat(newComments)
+            .filter((thing, index, self) =>
+              index === self.findIndex((t) => (
+                t.id === thing.id
+              ))
+            ).sort((a, b) =>{
+              return a.createdAt - b.createdAt;
+            });
+          this._comments$.next(commentsList);
         })
       );
   }
