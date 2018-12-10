@@ -10,7 +10,14 @@ ion-textarea {
 p {
     text-align: justify;
 }
-.comment-box {
-    overflow: scroll;
-    max-height: 400px;
+
+ion-content{
+    position: absolute;
+    top: 60px;
+    max-height: 60vh;
+}
+
+ion-footer{
+    position: fixed;
+    bottom: 0;
 }

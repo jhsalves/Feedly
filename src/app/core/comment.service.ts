@@ -10,7 +10,7 @@ import { Comment } from '../models/Comment';
 export class CommentService {
 
   protected _comments$ = new BehaviorSubject<Comment[]>([]);
-  pageSize = 4;
+  pageSize = 6;
   lastKey: any;
   finished = false;
   modifyingComment = false;
@@ -57,9 +57,7 @@ export class CommentService {
     for (let change of changedComments) {
       let commentId = change.doc.id;
       const changedComment = change.doc.data() as Comment;
-      console.log(commentId);
       if (change.type == 'added') {
-        console.log({ id: commentId, ...changedComment });
         currentComments.unshift({ id: commentId, ...changedComment });
       } else if (change.type == 'modified') {
         currentComments.forEach((comment, index) => {
@@ -77,7 +75,7 @@ export class CommentService {
     this.modifyingComment = false;
   }
 
-  private getComments(postId?: string, pageSize = 10): Observable<Comment[]> {
+  private getComments(postId?: string, pageSize = 4): Observable<Comment[]> {
     const collection = this.db.collection<Comment>('comments', ref => {
 
       ref.onSnapshot(this.handleCommentChanges.bind(this));
@@ -91,12 +89,14 @@ export class CommentService {
 
       let query = where || ref;
 
-      query.orderBy(this.orderField, 'desc')
-        .limit(this.pageSize);
+      query = query.orderBy(this.orderField, 'desc');
 
-      return (this.lastKey)
-        ? query.startAt(this.lastKey)
-        : query;
+      if(this.lastKey){
+        query = query.startAt(this.lastKey);
+      }
+      
+      return query.limit(pageSize);
+
     });
 
     return this.mapListKeys<Comment>(collection);
@@ -120,7 +120,14 @@ export class CommentService {
 
           this.finished = this.lastKey == newComments[newComments.length - 1][this.orderField];
 
-          this._comments$.next(currentComments.concat(newComments));
+          let commentsList = newComments.concat(currentComments)
+          .filter((value, index, array) => 
+              !array.filter((v, i) => value.id == v.id && i < index).length)
+          .sort((a,b) => {
+            return a.createdAt - b.createdAt
+          });
+
+          this._comments$.next(commentsList);
         })
       );
   }
