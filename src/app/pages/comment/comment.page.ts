@@ -64,24 +64,19 @@ export class CommentPage implements OnInit {
     this.commentService.cleanComments();
   }
 
-  doInfinite(event): Promise<void> {
+  doInfinite(event){
     setTimeout(() => {
       event.target.complete();
       if (!this.commentService.finished) {
         event.target.disabled = false;
-        return new Promise((resolve, reject) => {
           this.commentService.nextPage(this.postId)
             .pipe(take(1))
-            .subscribe(() => {
-              resolve();
-            });
-        });
+            .subscribe();
       } else {
         this.infiniteEvent = event;
         event.target.disabled = true;
       }
     }, 500);
-    return Promise.resolve();
   }
 
 }

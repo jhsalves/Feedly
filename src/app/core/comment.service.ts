@@ -10,7 +10,7 @@ import { Comment } from '../models/Comment';
 export class CommentService {
 
   protected _comments$ = new BehaviorSubject<Comment[]>([]);
-  pageSize = 4;
+  pageSize = 6;
   lastKey: any;
   finished = false;
   modifyingComment = false;
@@ -78,7 +78,7 @@ export class CommentService {
     this.modifyingComment = false;
   }
 
-  private getComments(postId?: string, pageSize = 10): Observable<Comment[]> {
+  private getComments(postId?: string, pageSize = 4): Observable<Comment[]> {
     const collection = this.db.collection<Comment>('comments', ref => {
 
       ref.onSnapshot(this.handleCommentChanges.bind(this));
@@ -92,12 +92,14 @@ export class CommentService {
 
       let query = where || ref;
 
-      query.orderBy(this.orderField, 'desc')
-        .limit(this.pageSize);
+      query = query.orderBy(this.orderField, 'desc');
 
-      return (this.lastKey)
-        ? query.startAt(this.lastKey)
-        : query;
+      if(this.lastKey){
+        query = query.startAt(this.lastKey);
+      }
+      
+      return query.limit(pageSize);
+
     });
 
     return this.mapListKeys<Comment>(collection);
@@ -120,15 +122,14 @@ export class CommentService {
           const currentComments = this._comments$.getValue();
 
           this.finished = this.lastKey == newComments[newComments.length - 1][this.orderField];
-          let commentsList = currentComments
-            .concat(newComments)
-            .filter((thing, index, self) =>
-              index === self.findIndex((t) => (
-                t.id === thing.id
-              ))
-            ).sort((a, b) =>{
-              return a.createdAt - b.createdAt;
-            });
+
+          let commentsList = newComments.concat(currentComments)
+          .filter((value, index, array) => 
+              !array.filter((v, i) => value.id == v.id && i < index).length)
+          .sort((a,b) => {
+            return a.createdAt - b.createdAt
+          });
+
           this._comments$.next(commentsList);
         })
       );
