@@ -6,5 +6,6 @@ export interface Post{
     text: string,
     likes?: boolean[],
     likesCount?: number,
-    modifying?: boolean
+    modifying?: boolean,
+    commentsCount?: number
 }

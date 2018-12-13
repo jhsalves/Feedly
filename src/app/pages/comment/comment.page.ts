@@ -7,6 +7,7 @@ import { User } from 'src/app/models/User';
 import { LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { takeLast, take } from 'rxjs/operators';
+import { FeedService } from 'src/app/core/feed.service';
 
 @Component({
   selector: 'app-comment',
@@ -24,7 +25,8 @@ export class CommentPage implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private authService: AuthService,
               private commentService: CommentService,
-              private loader: LoadingController) { }
+              private loader: LoadingController,
+              private feedService: FeedService) { }
 
   async ngOnInit() {
     this.postId = this.activatedRoute.snapshot.paramMap.get('id');
@@ -56,7 +58,6 @@ export class CommentPage implements OnInit {
 
     this.commentService.addComment(comment).then((c) => {
       this.message = '';
-      console.log(c);
     }).catch(error => console.log(error));
   }
 
@@ -77,6 +78,10 @@ export class CommentPage implements OnInit {
         event.target.disabled = true;
       }
     }, 500);
+  }
+
+  resetPosts(){
+    this.feedService.resetPosts();
   }
 
 }
