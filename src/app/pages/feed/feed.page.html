@@ -57,7 +57,7 @@
       <ion-col>
         <ion-button expand="block" fill="clear" size="small" color="danger" href="/comment/{{post.id}}" routerLinkActive="router-link-active"  class="border-right">
           <ion-icon name="text"></ion-icon>
-          <small>12 Comments</small>
+          <small>{{ post.commentsCount || 0  }} Comments</small>
         </ion-button>
       </ion-col>
       <ion-col>

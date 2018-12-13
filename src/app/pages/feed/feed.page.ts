@@ -50,11 +50,11 @@ export class FeedPage implements OnInit {
       message: 'Aguarde...',
       duration: 2000
     });
+    this.posts = this.feedService.posts$;
     await loadingElement.present().then(() => {
       this.feedService.nextPage()
-        .pipe(take(1))
+        .pipe(takeLast(1))
         .subscribe(async () => {
-          this.posts = this.feedService.posts$;
           await loadingElement.dismiss();
         });
     });
@@ -109,24 +109,19 @@ export class FeedPage implements OnInit {
     })
   }
 
-  doInfinite(event): Promise<void> {
+  doInfinite(event) {
     setTimeout(() => {
       event.target.complete();
       if (!this.feedService.finished) {
         event.target.disabled = false;
-        return new Promise((resolve, reject) => {
-          this.feedService.nextPage()
-            .pipe(take(1))
-            .subscribe(() => {
-              resolve();
-            });
-        });
+        this.feedService.nextPage()
+          .pipe(take(1))
+          .subscribe();
       } else {
         this.infiniteEvent = event;
         event.target.disabled = true;
       }
     }, 500);
-    return Promise.resolve();
   }
 
   refresh(event) {
@@ -193,6 +188,10 @@ export class FeedPage implements OnInit {
 
     await actionSheet.present();
 
+  }
+
+  ionViewDidEnter() {
+    this.posts = this.feedService.posts$;
   }
 
   like(post: Post) {
