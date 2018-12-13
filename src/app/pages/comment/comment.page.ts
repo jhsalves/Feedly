@@ -12,7 +12,7 @@ import { FeedService } from 'src/app/core/feed.service';
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.page.html',
-  styleUrls: ['./comment.page.scss'],
+  styleUrls: ['./comment.page.scss']
 })
 export class CommentPage implements OnInit {
 

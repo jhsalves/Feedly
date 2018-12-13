@@ -12,14 +12,21 @@
     <ion-infinite-scroll threshold="20%" position="top" (ionInfinite)="doInfinite($event)">
       <ion-infinite-scroll-content></ion-infinite-scroll-content>
     </ion-infinite-scroll>
-    <ion-card *ngFor="let comment of comments | async">
-      <ion-card-content>
-        <strong>{{comment.text}}</strong>
-        <p>
-          {{comment.createdAt | date : 'H:mm a'}}
-        </p>
-      </ion-card-content>
-    </ion-card>
+    <ion-list>
+      <ion-item *ngFor="let comment of comments | async">
+        <ion-icon slot="start" name="chatbubbles"></ion-icon>
+        <ion-label>
+          <h2 class='list-header'>
+            {{ comment.text }}
+          </h2>
+          <p>
+            <small class="comments">
+              {{ comment.ownerName }} <i>a {{ comment.createdAt | timeAgo }}</i>
+            </small>
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
   </div>
   <ion-footer padding>
     <ion-textarea [(ngModel)]="message" type="text" placeholder="Comment... "></ion-textarea>

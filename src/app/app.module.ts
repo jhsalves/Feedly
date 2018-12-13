@@ -16,17 +16,13 @@ import { SignupPage } from './pages/signup/signup.page';
 import { environment } from 'src/environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore';
-import { FeedPage } from './pages/feed/feed.page';
-import { TimeAgoPipe } from 'time-ago-pipe';
 import { Camera } from '@ionic-native/camera/ngx';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { HttpClientModule } from '@angular/common/http';
 
-
 @NgModule({
-  declarations: [AppComponent, LoginPage, SignupPage, FeedPage, TimeAgoPipe, ProgressBarComponent],
-  entryComponents: [LoginPage, SignupPage, FeedPage],
+  declarations: [AppComponent, LoginPage, SignupPage],
+  entryComponents: [LoginPage, SignupPage],
   imports: [BrowserModule,
      IonicModule.forRoot(),
      AppRoutingModule,

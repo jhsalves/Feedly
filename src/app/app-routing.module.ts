@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPage},
   { path: 'signup', component: SignupPage },
-  { path: 'feed', component: FeedPage },
+  { path: 'feed', loadChildren: './pages/feed/feed.module#FeedPageModule' },
   { path: 'comment', loadChildren: './pages/comment/comment.module#CommentPageModule' }
 ];
 
