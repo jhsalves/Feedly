@@ -4,6 +4,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { Firebase } from '@ionic-native/firebase';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -19,6 +20,7 @@ import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore
 import { Camera } from '@ionic-native/camera/ngx';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularFireMessagingModule } from '@angular/fire/messaging'
 
 @NgModule({
   declarations: [AppComponent, LoginPage, SignupPage],
@@ -30,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
      AngularFireDatabaseModule,
      AngularFireAuthModule,
      AngularFirestoreModule,
+     AngularFireMessagingModule,
      FormsModule,
      ReactiveFormsModule,
      HttpClientModule
@@ -39,7 +42,8 @@ import { HttpClientModule } from '@angular/common/http';
     SplashScreen,
     Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    AngularFireStorage
+    AngularFireStorage,
+    Firebase
   ],
   bootstrap: [AppComponent]
 })
