@@ -5,6 +5,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { User } from '../../models/User';
 import { ToastService } from '../../core/toast.service';
 import { LoadingController } from '@ionic/angular';
+import { FcmService } from 'src/app/core/fcm.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginPage implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private toastService: ToastService,
-    private loader: LoadingController) { }
+    private loader: LoadingController,
+    private fcm: FcmService) { }
 
   ngOnInit() {
     this.createSignInForm();
@@ -53,24 +55,24 @@ export class LoginPage implements OnInit {
         message: 'Aguarde...',
         duration: 2000
       });
-      await loadingElement.present().then(() => {
-        this.authService.SignIn(this.userCredentials).then(() => {
-          this.toastService.presentSuccessToast('Login bem sucedido.').then(async () => {
-            await loadingElement.dismiss();
-            this.router.navigateByUrl('/feed');
-          });
-        }).catch(async error => {
-          console.log(error);
-          await loadingElement.dismiss();
-          if (error.code && error.code.indexOf('wrong-password') != -1) {
-            this.toastService.presentLightErrorToast('E-mail ou senha incorretos.');
-          }else{
-            this.toastService.presentLightErrorToast('Ocorreu um erro na autenticação.');
-          }
-        });
+      await loadingElement.present();
+      this.authService.SignIn(this.userCredentials).then(async (userCredentials) => {
+        await this.toastService.presentSuccessToast('Login bem sucedido.');
+        await loadingElement.dismiss();
+        const token = await this.fcm.getToken(userCredentials.user.uid);
+        console.log(token);
+        this.router.navigateByUrl('/feed');
+      }).catch(async error => {
+        console.log(error);
+        await loadingElement.dismiss();
+        if (error.code && error.code.indexOf('wrong-password') != -1) {
+          await this.toastService.presentLightErrorToast('E-mail ou senha incorretos.');
+        } else {
+          await this.toastService.presentLightErrorToast('Ocorreu um erro na autenticação.');
+        }
       });
     } else {
-      this.toastService.presentLightErrorToast('Preencha com suas credenciais.');
+      await this.toastService.presentLightErrorToast('Preencha com suas credenciais.');
     }
   }
 }

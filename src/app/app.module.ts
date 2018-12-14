@@ -4,7 +4,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { Firebase } from '@ionic-native/firebase';
+import { Firebase } from '@ionic-native/firebase/ngx';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -20,7 +20,7 @@ import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore
 import { Camera } from '@ionic-native/camera/ngx';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { HttpClientModule } from '@angular/common/http';
-import { AngularFireMessagingModule } from '@angular/fire/messaging'
+import { FcmService } from './core/fcm.service';
 
 @NgModule({
   declarations: [AppComponent, LoginPage, SignupPage],
@@ -32,7 +32,6 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging'
      AngularFireDatabaseModule,
      AngularFireAuthModule,
      AngularFirestoreModule,
-     AngularFireMessagingModule,
      FormsModule,
      ReactiveFormsModule,
      HttpClientModule
@@ -43,7 +42,8 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging'
     Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     AngularFireStorage,
-    Firebase
+    Firebase,
+    FcmService
   ],
   bootstrap: [AppComponent]
 })
